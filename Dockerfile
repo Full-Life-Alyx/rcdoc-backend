@@ -9,9 +9,7 @@ WORKDIR /app
 RUN apk add --no-cache clang lld musl-dev git
 RUN apk add libressl-dev
 
-RUN env > .env
-COPY migrations migrations
-
+COPY .sqlx .sqlx
 
 # Build the application.
 # Leverage a cache mount to /usr/local/cargo/registry/
@@ -22,6 +20,7 @@ COPY migrations migrations
 # source code into the container. Once built, copy the executable to an
 # output directory before the cache mounted /app/target is unmounted.
 RUN --mount=type=bind,source=src,target=src \
+    --mount=type=bind,source=migrations,target=migrations\
     --mount=type=bind,source=Cargo.toml,target=Cargo.toml \
     --mount=type=bind,source=Cargo.lock,target=Cargo.lock \
     --mount=type=cache,target=/app/target/ \

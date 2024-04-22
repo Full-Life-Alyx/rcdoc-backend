@@ -15,8 +15,9 @@ use crate::api::test::TestService;
 use crate::auth::middleware::auth_extractor;
 use crate::store::{Environment, Store};
 
-const PORT: u16 = 80;
-pub const DOMAIN: &str = "localhost";
+const DOMAIN: &str = "localhost";
+const PORT: u16 = 8080;
+const LOCATION: &str = concatcp!("http://", DOMAIN, ":", PORT);
 
 pub mod api;
 pub mod auth;
@@ -44,7 +45,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + 'static>> {
         let pool = PgPool::connect(&env.pg_url).await?;
 
         // I have no idea why it doesn't acccept a string slice
-        let client = redis::Client::open(env.redis_url.clone()).unwrap();
+        let client = redis::Client::open(env.redis_url.as_ref()).unwrap();
         let connection = client.get_multiplexed_tokio_connection().await.unwrap();
 
         // migrations should happen only when everything is connected ok
@@ -85,8 +86,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error + 'static>> {
 
     let listener = TcpListener::bind(("0.0.0.0", PORT));
     println!(
-        "Starting server on port {} (http://localhost:{})",
-        PORT, PORT
+        "Starting server on port {} ({})",
+        PORT, LOCATION
     );
     poem::Server::new(listener).run(app).await?;
 

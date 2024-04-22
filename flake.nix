@@ -7,18 +7,18 @@
       pkgs = nixpkgs.legacyPackages.${system};
     in {
       devShells.${system}.default = pkgs.mkShell {
-        packages = [
-          pkgs.cargo
-          pkgs.rustc
+        packages = with pkgs; [
+          cargo
+          rustc
 
-          pkgs.rust-analyzer
-          pkgs.rustfmt
+          rust-analyzer
+          rustfmt
 
           # If the dependencies need system libs, you usually need pkg-config + the lib
-          pkgs.pkg-config
-          pkgs.openssl
+          pkg-config
+          openssl
 
-          pkgs.sqlx-cli
+          sqlx-cli
         ];
 
         env = { RUST_BACKTRACE = "full"; };

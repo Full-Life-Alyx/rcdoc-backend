@@ -1,4 +1,6 @@
 /target
 /postgres
 /local_data
+/notes
 .env
+
