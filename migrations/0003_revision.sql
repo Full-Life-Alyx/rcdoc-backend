@@ -1,5 +1,5 @@
 CREATE TABLE revision (
-  id UUID NOT NULL PRIMARY KEY,
+  id UUID NOT NULL PRIMARY KEY DEFAULT gen_random_uuid(),
   version INTEGER NOT NULL,
   document_id UUID NOT NULL,
   author UUID NOT NULL,
