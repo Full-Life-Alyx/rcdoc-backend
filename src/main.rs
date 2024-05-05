@@ -9,6 +9,7 @@ use poem_grants::GrantsMiddleware;
 use poem_openapi::OpenApiService;
 use sqlx::{migrate, PgPool};
 use time::OffsetDateTime;
+use tokio::signal;
 
 use crate::api::tag::TagService;
 use crate::api::test::TestService;
@@ -89,7 +90,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error + 'static>> {
         "Starting server on port {} ({})",
         PORT, LOCATION
     );
-    poem::Server::new(listener).run(app).await?;
+
+    poem::Server::new(listener).run_with_graceful_shutdown(app, shutdown(), None).await?;
 
     Ok(())
+}
+
+async fn shutdown() {
+    signal::ctrl_c().await.expect("Failed to listen for ctrl c");
 }
