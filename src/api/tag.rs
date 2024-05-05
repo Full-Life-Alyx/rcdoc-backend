@@ -1,5 +1,6 @@
 use futures::{
-    future::{self, join_all}, stream, StreamExt
+    future::{self, join_all},
+    stream, StreamExt,
 };
 use poem_openapi::{
     param::Query,

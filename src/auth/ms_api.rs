@@ -11,13 +11,13 @@ use tracing::{error, info};
 
 use crate::{store::Environment, LOCATION};
 
-pub struct AuthApi {
+pub struct MicrosoftAuthApi {
     client: Client,
     redirect: String,
     oauth_const: MicrosoftOauthConst,
 }
 
-impl AuthApi {
+impl MicrosoftAuthApi {
     pub fn new(env: Environment) -> Self {
         let oauth_const = MicrosoftOauthConst {
             auth_url: concatcp!(
@@ -46,7 +46,7 @@ impl AuthApi {
 }
 
 #[OpenApi]
-impl AuthApi {
+impl MicrosoftAuthApi {
     #[oai(path = "/microsoft", method = "get")]
     async fn microsoft_redirect(&self) -> OAuthRedirectResponse {
         OAuthRedirectResponse::SuccessfulRedirect(self.redirect.clone())
@@ -157,7 +157,7 @@ impl AuthApi {
 }
 
 pub(super) fn microsoft_redirect_string(oauth_const: &MicrosoftOauthConst) -> String {
-    type Api = AuthApi;
+    type Api = MicrosoftAuthApi;
 
     #[derive(Serialize)]
     struct MicrosoftRequestOptions<'a> {

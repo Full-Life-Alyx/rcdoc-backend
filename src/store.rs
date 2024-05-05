@@ -1,12 +1,15 @@
-use std::{env::{var, VarError}, sync::Arc};
+use std::{
+    env::{var, VarError},
+    sync::Arc,
+};
 
 use redis::{aio::MultiplexedConnection, AsyncCommands, RedisError};
 use sqlx::{types::Uuid, Pool, Postgres};
 use thiserror::Error;
 
 pub struct Store {
-    pub(crate) pg: Pool<Postgres>,
-    pub(crate) redis: MultiplexedConnection,
+    pub pg: Pool<Postgres>,
+    pub redis: MultiplexedConnection,
 }
 
 impl Store {
@@ -19,8 +22,6 @@ impl Store {
         let res: Option<String> = redis.get(format!("build:text:{}", doc_id.simple())).await?;
         Ok(res.unwrap())
     }
-
-    fn build_doc() {}
 }
 
 pub struct Environment {
