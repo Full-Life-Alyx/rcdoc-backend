@@ -1,6 +1,12 @@
 /target
-/postgres
+# for the script
 /local_data
 /notes
 .env
+# You can use rcdoc main repo to find a config for testing the dev compose.yaml
+/test_env
+# Also config, redis config for now
+/test_config
+# The postgres volume
+/postgres_test
 
