@@ -4,6 +4,7 @@ use std::env;
 use std::{fs::File, sync::Arc};
 
 use const_format::concatcp;
+use poem::middleware::Cors;
 use poem::{endpoint::StaticFilesEndpoint, listener::TcpListener, EndpointExt, Route};
 use poem_grants::GrantsMiddleware;
 use poem_openapi::OpenApiService;
@@ -54,8 +55,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error + 'static>> {
         Store::new(pool, connection)
     };
 
-    let test_service = OpenApiService::new(TestService, "Test", "0.1-alpha");
-    let tag_service = OpenApiService::new(TagService::new(store), "Tag service", "0.1-alpha");
+    let cors = Cors::new().allow_origin_regex("http://localhost:*");
+    let test_service = OpenApiService::new(TestService, "Test", "0.1-alpha").with(cors);
+    let tag_service = OpenApiService::new(TagService::new(store), "Tag service", "0.1-alpha").with(cors);
 
     let app = Route::new()
         .nest("/tag", tag_service)
